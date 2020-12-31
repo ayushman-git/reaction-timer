@@ -5,7 +5,12 @@
   >
     <h1 v-if="!isPlaying" class="main-heading">Test Your Skills</h1>
     <Info class="info" v-if="showInfo" :infoMsg="infoMsg" />
-    <ReactionBlock v-if="isPlaying" class="reaction-block" :delay="delay" />
+    <ReactionBlock
+      @stop="stopHandler"
+      v-if="isPlaying && typeSelected === 'reaction'"
+      class="reaction-block"
+      :delay="delay"
+    />
 
     <div v-if="!isPlaying" class="play-card-wrapper">
       <PlayCard
@@ -41,6 +46,9 @@ export default {
     };
   },
   methods: {
+    stopHandler() {
+      this.isPlaying = false;
+    },
     playHandler(type) {
       this.isPlaying = true;
       this.delay = 5000 + Math.random() * 5000;
@@ -48,10 +56,13 @@ export default {
       if (this.typeSelected === "reaction") {
         this.infoMsg = "Tap anywhere as soon as color changes";
       }
+      else {
+        this.infoMsg = "Tap dots as soon as they appear";
+      }
       this.showInfo = true;
       setTimeout(() => {
         this.showInfo = false;
-      }, 3000);
+      }, 2000);
     },
   },
 };

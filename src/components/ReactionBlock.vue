@@ -1,11 +1,17 @@
 <template>
-  <div v-if="showBlock" @click="stopReactionTimer">
-    <h1 v-if="!timerStopped">Tap</h1>
-    <div class="result" v-if="timerStopped">
-      <h1>{{ reactionTime }}</h1>
-      <h2>{{ resultText }}</h2>
+  <section>
+    <div @click="preventSpam" v-if="!showBlock" class="prevent-spam"></div>
+    <div class="stupid-div" v-if="showSpamMsg">
+      <h1 class="spam-msg">You clicked too soon</h1>
     </div>
-  </div>
+    <div class="reaction-wrapper" v-if="showBlock" @click="stopReactionTimer">
+      <h1 v-if="!timerStopped">Tap</h1>
+      <div class="result" v-if="timerStopped">
+        <h1>{{ reactionTime }} ms</h1>
+        <h2>{{ resultText }}</h2>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -18,16 +24,16 @@ export default {
       reactionTime: 0,
       interval: null,
       timerStopped: false,
+      showSpamMsg: false,
+      defaultInterval: null,
     };
   },
   mounted() {
-    console.log(this.delay);
-    setTimeout(() => {
+    this.defaultInterval = setTimeout(() => {
       this.showBlock = true;
 
       this.interval = setInterval(() => {
         this.reactionTime++;
-        console.log(this.reactionTime);
       });
     }, this.delay);
   },
@@ -51,7 +57,17 @@ export default {
     },
   },
   methods: {
+    preventSpam() {
+      this.showSpamMsg = true;
+      clearTimeout(this.defaultInterval);
+      setTimeout(() => {
+        this.$emit("stop");
+      }, 2000);
+    },
     stopReactionTimer() {
+      if (this.timerStopped) {
+        this.$emit("stop");
+      }
       clearInterval(this.interval);
       this.timerStopped = true;
     },
@@ -60,7 +76,20 @@ export default {
 </script>
 
 <style scoped>
-div {
+section,
+.stupid-div {
+  width: 100%;
+  height: 100vh;
+}
+.stupid-div {
+  background-color: white;
+  z-index: 5;
+}
+.prevent-spam {
+  width: 100%;
+  height: 100vh;
+}
+.reaction-wrapper {
   width: 100%;
   height: 100vh;
   background-color: springgreen;
@@ -68,6 +97,7 @@ div {
   align-items: center;
   user-select: none;
   justify-content: center;
+  text-align: center;
 }
 h1 {
   font-size: 7vw;
@@ -75,5 +105,13 @@ h1 {
 .result {
   display: flex;
   flex-direction: column;
+}
+.spam-msg {
+  color: red;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 3vw;
 }
 </style>
