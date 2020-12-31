@@ -1,49 +1,95 @@
 <template>
-  <div v-if="!isPlaying" @click="start" class="play-button">
-    <svg
-      id="play-icon"
-      enable-background="new 0 0 320.001 320.001"
-      viewBox="0 0 320.001 320.001"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="m295.84 146.049-256-144c-4.96-2.784-11.008-2.72-15.904.128-4.928 2.88-7.936 8.128-7.936 13.824v288c0 5.696 3.008 10.944 7.936 13.824 2.496 1.44 5.28 2.176 8.064 2.176 2.688 0 5.408-.672 7.84-2.048l256-144c5.024-2.848 8.16-8.16 8.16-13.952s-3.136-11.104-8.16-13.952z"
+  <div
+    id="backgroud"
+    :style="{ background: 'linear-gradient(#FFFFFF, #ECE9E6)' }"
+  >
+    <h1 v-if="!isPlaying" class="main-heading">Test Your Skills</h1>
+    <Info class="info" v-if="showInfo" :infoMsg="infoMsg" />
+    <ReactionBlock v-if="isPlaying" class="reaction-block" :delay="delay" />
+
+    <div v-if="!isPlaying" class="play-card-wrapper">
+      <PlayCard
+        @typeSelected="playHandler"
+        header="Reaction Timer"
+        content="Check your reaction time"
+        type="reaction"
       />
-    </svg>
+      <PlayCard
+        @typeSelected="playHandler"
+        header="Accuracy Tester"
+        content="Check your click accuracy"
+        type="accuracy"
+      />
+    </div>
   </div>
 </template>
 
 <script>
+import PlayCard from "./components/PlayCard";
+import Info from "./components/Info";
+import ReactionBlock from "./components/ReactionBlock";
 export default {
   name: "App",
+  components: { PlayCard, Info, ReactionBlock },
   data() {
     return {
       isPlaying: false,
       delay: null,
+      typeSelected: null,
+      showInfo: false,
+      infoMsg: "",
     };
   },
-  components: {},
   methods: {
-    start() {
+    playHandler(type) {
       this.isPlaying = true;
-      this.delay = 3000 + Math.random() * 5000;
+      this.delay = 5000 + Math.random() * 5000;
+      this.typeSelected = type;
+      if (this.typeSelected === "reaction") {
+        this.infoMsg = "Tap anywhere as soon as color changes";
+      }
+      this.showInfo = true;
+      setTimeout(() => {
+        this.showInfo = false;
+      }, 3000);
     },
   },
 };
 </script>
 
 <style>
-.play-button {
-  position: fixed;
+#backgroud {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+.play-card-wrapper {
+  position: absolute;
+  display: flex;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -20%);
+}
+
+.play-card-wrapper > * {
+  margin: 2em;
+}
+
+.info {
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 3em;
-  height: 3em;
-  outline: none;
-  border: none;
+  width: 100%;
+  padding: 2em;
 }
-#play-icon {
-  fill: rgb(22, 109, 160);
+.reaction-block {
+  position: absolute;
+}
+.main-heading {
+  font-size: 5vw;
+  margin-top: 2em;
+  text-align: center;
 }
 </style>
