@@ -12,7 +12,7 @@
       :delay="delay"
     />
 
-    <AccuracyBlock  v-if="isPlaying && typeSelected === 'accuracy'" />
+    <AccuracyBlock @stop="stopHandler"  v-if="isPlaying && typeSelected === 'accuracy'" />
 
     <div v-if="!isPlaying" class="play-card-wrapper">
       <PlayCard
