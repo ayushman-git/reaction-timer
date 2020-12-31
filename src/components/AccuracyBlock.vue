@@ -1,7 +1,18 @@
 <template>
   <section v-if="showBlock">
-    <div v-if="timeLeft > 0" @click="blobClickHandler" class="blob-container" ref="container"></div>
-    <div v-if="timeLeft <= 0"></div>
+    <div
+      v-if="timeLeft > 0"
+      @click="blobClickHandler"
+      class="blob-container"
+      ref="container"
+    ></div>
+    <div v-if="timeLeft <= 0">
+      <header>
+        <p>{{ successfulClicks }}</p>
+        <p>{{ failedClicks }}</p>
+      </header>
+      <h1>{{ accuracyRate }}</h1>
+    </div>
     <h2
       class="time-left"
       :style="[timeLeft < 10 ? { color: 'red' } : {}]"
@@ -22,7 +33,7 @@ export default {
       successfulClicks: 0,
       failedClicks: 0,
       timeLeft: 30,
-      delay: 1000,
+      delay: 200,
     };
   },
   mounted() {
@@ -31,6 +42,14 @@ export default {
       clearInterval(this.blobInterval);
       console.log(this.successfulClicks, this.failedClicks);
     }, 1000 * 30);
+  },
+  computed: {
+    accuracyRate() {
+      const result =
+        (this.successfulClicks * 100) / this.successfulClicks +
+        this.failedClicks;
+      return result;
+    },
   },
   methods: {
     blobClickHandler(e) {
@@ -51,8 +70,10 @@ export default {
 
       this.blobInterval = setInterval(() => {
         this.delay -= 50;
+        console.log(this.delay);
         this.decrementTimeLeft();
         const blob = document.createElement("div");
+        blob.classList.add("blob");
         blob.style.position = "absolute";
         blob.style.width = "30px";
         blob.style.height = "30px";
