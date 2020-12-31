@@ -31,8 +31,8 @@ section {
 
 section:hover {
   box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
-  color: rgb(163, 53, 53);
-  background-color: black;
+  color: rgb(255, 255, 255);
+  background-color: rgb(61, 168, 255);
 }
 
 h2 {

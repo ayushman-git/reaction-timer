@@ -12,6 +12,8 @@
       :delay="delay"
     />
 
+    <AccuracyBlock  v-if="isPlaying && typeSelected === 'accuracy'" />
+
     <div v-if="!isPlaying" class="play-card-wrapper">
       <PlayCard
         @typeSelected="playHandler"
@@ -33,9 +35,10 @@
 import PlayCard from "./components/PlayCard";
 import Info from "./components/Info";
 import ReactionBlock from "./components/ReactionBlock";
+import AccuracyBlock from "./components/AccuracyBlock";
 export default {
   name: "App",
-  components: { PlayCard, Info, ReactionBlock },
+  components: { PlayCard, Info, ReactionBlock, AccuracyBlock },
   data() {
     return {
       isPlaying: false,
